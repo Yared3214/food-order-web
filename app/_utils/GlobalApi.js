@@ -2,8 +2,8 @@ import { request, gql } from 'graphql-request'
 
 const MASTER_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL
 
-const getCategories = async() => {
-    const query = gql`
+const getCategories = async () => {
+  const query = gql`
     query GetCategories {
         categories(first: 50) {
           id
@@ -14,14 +14,14 @@ const getCategories = async() => {
           }
         }
       }	`
-      const result = await request(MASTER_URL, query)
-      return result;
+  const result = await request(MASTER_URL, query)
+  return result;
 }
 
-const getBusiness = async(slug) => {
+const getBusiness = async (slug) => {
   const query = gql`
   query GetBusiness {
-    restaurants(where: {categories_some: {slug: "`+slug+`"}}) {
+    restaurants(where: {categories_some: {slug: "`+ slug + `"}}) {
       aboutUs
       address
       banner {
@@ -44,10 +44,10 @@ const getBusiness = async(slug) => {
   return result;
 }
 
-const getBusinessDetail = async(businessSlug) => {
+const getBusinessDetail = async (businessSlug) => {
   const query = gql`
   query RestaurantDetail {
-    restaurant(where: {slug: "`+businessSlug+`"}) {
+    restaurant(where: {slug: "`+ businessSlug + `"}) {
       aboutUs
       address
       banner {
@@ -88,16 +88,16 @@ const getBusinessDetail = async(businessSlug) => {
   return result;
 }
 
-const AddToCart = async(data) => {
+const AddToCart = async (data) => {
   const query = gql`
   mutation AddToCart {
     createUserCart(
-      data: {email: "`+data?.email+`", 
-      price: `+data?.price+`, 
-      productDescription: "`+data?.description+`", 
-      productImage: "`+data?.imageUrl+`", 
-      productName: "`+data?.productName+`",
-      restaurant: {connect: {slug: "`+data.restaurantSlug+`"}}}
+      data: {email: "`+ data?.email + `", 
+      price: `+ data?.price + `, 
+      productDescription: "`+ data?.description + `", 
+      productImage: "`+ data?.imageUrl + `", 
+      productName: "`+ data?.productName + `",
+      restaurant: {connect: {slug: "`+ data.restaurantSlug + `"}}}
     ) {
       id
     }
@@ -109,10 +109,10 @@ const AddToCart = async(data) => {
   return result;
 }
 
-const getUserCarts = async(email) => {
+const getUserCarts = async (email) => {
   const query = gql`
   query GetUserCarts {
-    userCarts(where: {email: "`+email+`"}, first: 50) {
+    userCarts(where: {email: "`+ email + `"}, first: 50) {
       id
       price
       productDescription
@@ -131,10 +131,10 @@ const getUserCarts = async(email) => {
   return result;
 }
 
-const disconnectRestroFromUserCartItem = async(id) => {
+const disconnectRestroFromUserCartItem = async (id) => {
   const query = gql`
   mutation DisconnectRestautarantFromUserCartItem {
-    updateUserCart(data: {restaurant: {disconnect: true}}, where: {id: "`+id+`"})
+    updateUserCart(data: {restaurant: {disconnect: true}}, where: {id: "`+ id + `"})
     {
       id
     }
@@ -147,10 +147,10 @@ const disconnectRestroFromUserCartItem = async(id) => {
   return result;
 }
 
-const removeItemFromCart = async(id) => {
+const removeItemFromCart = async (id) => {
   const query = gql`
   mutation RemoveItemFromCart {
-    deleteUserCart(where: {id: "`+id+`"}) {
+    deleteUserCart(where: {id: "`+ id + `"}) {
       id
     }
   }`
@@ -158,16 +158,16 @@ const removeItemFromCart = async(id) => {
   return result;
 }
 
-const addReview = async(data) => {
+const addReview = async (data) => {
   const query = gql`
   mutation AddRiview {
     createReview(
-      data: {email: "`+data.email+`", 
-        reviewText: "`+data.reviewText+`", 
-        star: `+data.star+`, 
-        userName: "`+data.userName+`", 
-        profileImage: "`+data.profileImage+`", 
-        restaurant: {connect: {slug: "`+data.slug+`"}}}
+      data: {email: "`+ data.email + `", 
+        reviewText: "`+ data.reviewText + `", 
+        star: `+ data.star + `, 
+        userName: "`+ data.userName + `", 
+        profileImage: "`+ data.profileImage + `", 
+        restaurant: {connect: {slug: "`+ data.slug + `"}}}
     ) {
       id
     }
@@ -179,10 +179,10 @@ const addReview = async(data) => {
   return result;
 }
 
-const getRestaurantReviews = async(slug) => {
+const getRestaurantReviews = async (slug) => {
   const query = gql`
   query RestaurantReviews {
-    reviews(where: {restaurant: {slug: "`+slug+`"}},orderBy: publishedAt_DESC) {
+    reviews(where: {restaurant: {slug: "`+ slug + `"}},orderBy: publishedAt_DESC) {
       email
       id
       profileImage
@@ -197,17 +197,17 @@ const getRestaurantReviews = async(slug) => {
   return result;
 }
 
-const CreateNewOrder = async(data) => {
+const CreateNewOrder = async (data) => {
   const query = gql`
   mutation CreateNewOrder {
     createOrder(
-      data: {address: "`+data.address+`", 
-        email: "`+data.userEmail+`", 
-        orderAmount: `+data.amount+`, 
-        phone: "`+data.phone+`",
-        restaurantName: "`+data.restroName+`", 
-        userName: "`+data.userName+`", 
-        zipCode: "`+data.zipCode+`"}
+      data: {address: "`+ data.address + `", 
+        email: "`+ data.userEmail + `", 
+        orderAmount: `+ data.amount + `, 
+        phone: "`+ data.phone + `",
+        restaurantName: "`+ data.restroName + `", 
+        userName: "`+ data.userName + `", 
+        zipCode: "`+ data.zipCode + `"}
     )
     {
       id
@@ -217,36 +217,76 @@ const CreateNewOrder = async(data) => {
   return result;
 }
 
-const updateOrderToAddOrderItem = async(name, price, id, email) => {
+const updateOrderToAddOrderItem = async (name, price, id, email) => {
   const query = gql`
   mutation UpdateOrderWithDetail {
     updateOrder(
-      data: {orderDetail: {create: {OrderItem: {data: {name: "`+name+`", price: `+price+`}}}}}
-      where: {id: "`+id+`"}
+      data: {orderDetail: {create: {OrderItem: {data: {name: "`+ name + `", price: ` + price + `}}}}}
+      where: {id: "`+ id + `"}
     ) {
       id
     }
     publishManyOrders(to: PUBLISHED) {
       count
     }
-    deleteManyUserCarts(where: {email: "`+email+`"}) {
+    deleteManyUserCarts(where: {email: "`+ email + `"}) {
       count
     }
   }`
   const result = await request(MASTER_URL, query);
   return result;
 }
+const getOrders = async (email) => {
+  const query = gql`
+  query MyQuery {
+    orders(where: {email: "`+ email + `"}) {
+      address
+      orderAmount
+      phone
+    }
+  }`
+  const result = await request(MASTER_URL, query);
+  return result;
+}
 
-export default{
-      getCategories,
-      getBusiness,
-      AddToCart,
-      getBusinessDetail,
-      getUserCarts,
-      disconnectRestroFromUserCartItem,
-      removeItemFromCart,
-      addReview,
-      getRestaurantReviews,
-      CreateNewOrder,
-      updateOrderToAddOrderItem,
+const getUserOrders = async (email) => {
+  const query = gql`
+  query UserOrders {
+  orders(where: {email: "`+ email + `"}, orderBy: publishedAt_DESC) {
+    address
+    createdAt
+    email
+    id
+    orderAmount
+    orderDetail {
+      ... on OrderItem {
+        id
+        name
+        price
+      }
+    }
+    phone
+    restaurantName
+    userName
+    zipCode
+  }
+}`
+  const result = await request(MASTER_URL, query);
+  return result;
+}
+
+export default {
+  getCategories,
+  getBusiness,
+  AddToCart,
+  getBusinessDetail,
+  getUserCarts,
+  disconnectRestroFromUserCartItem,
+  removeItemFromCart,
+  addReview,
+  getRestaurantReviews,
+  CreateNewOrder,
+  updateOrderToAddOrderItem,
+  getOrders,
+  getUserOrders,
 }

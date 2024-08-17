@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState, useLocalStorage } from 'react'
 import Image from "next/image";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SignInButton, SignUpButton, useUser, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, useUser, UserButton, SignOutButton } from "@clerk/nextjs";
 import { ShoppingCart } from 'lucide-react'
 import { CartUpdateContext } from '../_context/CartUpdateContext';
 import GlobalApi from '../_utils/GlobalApi';
@@ -12,7 +12,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 import Cart from './Cart';
+import Link from 'next/link';
 
 
 const Header = () => {
@@ -61,7 +71,23 @@ const Header = () => {
   </PopoverContent>
 </Popover>
 
-        <UserButton className="w-[150px] h-[150px]"/>
+        {/* <UserButton className="w-[150px] h-[150px]"/> */}
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+          <Image src={user?.imageUrl} alt='user'
+        width={35}
+        height={35}
+        className='rounded-full'/>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Link href={'/user'}><DropdownMenuItem>Profile</DropdownMenuItem></Link>
+            <Link href={'/user#/my-orders'}><DropdownMenuItem>My Orders</DropdownMenuItem></Link>
+            <DropdownMenuItem><SignOutButton>Logout</SignOutButton></DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
       </div>
   : <div className="flex gap-2 pr-3">
   <SignInButton mode='modal'>

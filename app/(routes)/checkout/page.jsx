@@ -89,9 +89,11 @@ function CheckOutPage() {
                     setZip('')
                     setPhone('')
                     setUpdateCart(!updateCart)
+                    sendEmail()
                     router.replace('/confirmation')
                     }
                 }, (error)=>{
+                    console.log('error');
                     setLoading(false);
                 })
                 })
@@ -99,8 +101,24 @@ function CheckOutPage() {
         })
       }
 
-      const onApprove = () => {
+      const sendEmail = async() => {
+        try{
+            const response = await fetch('/api/send-email', {
+                method: "POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({email: user?.primaryEmailAddress.emailAddress})
+            })
 
+            if(!response.ok) {
+                toast('Error Sending Email')
+            } else {
+                toast('Confirmation Email Sent')
+            }
+        } catch(error) {
+            toast('Error Sending Email')
+        }
       }
 
   return (
@@ -132,13 +150,13 @@ function CheckOutPage() {
                 <h2 className='flex justify-between'>Tax(15%) : <span>${calculatedTax}</span></h2>
                 <hr></hr>
                 <h2 className='font-bold flex justify-between'>Total : <span>${totalAmount}</span></h2>
-                {/* <Button onClick={()=> makePayment()}
+                {/* <Button onClick={()=> sendEmail()}
                 disabled={userName==''|| email=='' || phone=='' || zip=='' || address=='' || cart?.length == 0}>
                     {loading ? <Loader className='animate-spin'/>
                     : 'Make Payment'}
                     </Button> */}
                     {totalAmount>5&& <PayPalButtons 
-                    onApprove={()=>console.log('approved')}
+                    onApprove={makePayment}
                     style={{layout: 'horizontal'}}
                     disabled={!(userName&&cart&&zip&&email&&phone&&address)||loading}
                     createOrder={(data, actions)=>{
